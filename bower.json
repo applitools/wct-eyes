@@ -1,0 +1,24 @@
+{
+  "name": "wct-eyes",
+  "description": "WCT plugin that enables support for local browsers via Selenium",
+  "main": "lib/plugin.js",
+  "authors": [
+    "Applitools Team <team@applitools.com>"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": [
+    "wct",
+    "web-component-tester",
+    "plugin",
+    "eyes",
+    "applitools"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

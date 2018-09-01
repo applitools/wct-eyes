@@ -1,0 +1,62 @@
+{
+  "name": "wct-eyes",
+  "version": "1.0.0",
+  "description": "WCT plugin that enables support for local browsers via Selenium",
+  "keywords": [
+    "wct",
+    "web-component-tester",
+    "plugin",
+    "eyes",
+    "applitools"
+  ],
+  "homepage": "https://applitools.com/",
+  "author": {
+    "name": "Applitools Team",
+    "email": "team@applitools.com",
+    "url": "http://www.applitools.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/applitools/eyes.wct.git"
+  },
+  "bugs": {
+    "url": "https://github.com/applitools/eyes.wct/issues"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "files": [
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "eyes-browser.js",
+    "lib/"
+  ],
+  "main": "lib/plugin.js",
+  "dependencies": {
+    "@applitools/eyes.sdk.core": "^1.8.0",
+    "send": "^0.11.1",
+    "express": "^4.15.3",
+    "chalk": "^1.1.3"
+  },
+  "wct-plugin": {
+    "cli-options": {
+      "apiKey": {
+        "help": "Applitools API Key which can be found in the Admin Panel on website.",
+        "full": "eyes-api-key"
+      },
+      "serverUrl": {
+        "help": "Eyes server URL that will be used during matching screenshots.",
+        "full": "eyes-server-url"
+      },
+      "proxy": {
+        "help": "Defines the proxy server that will be used for requests to Applitools services.",
+        "full": "eyes-proxy"
+      }
+    }
+  },
+  "license": "SEE LICENSE IN LICENSE",
+  "engines": {
+    "node": ">=6.9.0"
+  }
+}

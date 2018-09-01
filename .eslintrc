@@ -1,0 +1,48 @@
+{
+  "root": true,
+  "extends": ["airbnb-base"],
+  "env": {
+    "node": true,
+    "es6": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "script"
+  },
+  "rules": {
+    "strict": ["error", "global"],
+    "one-var": ["error", {"initialized": "never"}],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "never",
+      "exports": "always-multiline",
+      "functions": "never"
+    }],
+    "arrow-parens": ["error", "always"],
+    "no-use-before-define": ["off"],
+    "no-shadow": ["error", {"builtinGlobals": false, "hoist": "functions", "allow": ["driver"]}],
+    "consistent-return": ["warn"],
+    "max-len": ["warn", 120],
+    "no-unused-vars": ["warn"],
+    "no-param-reassign": ["off"],
+    "global-require": ["warn"],
+    "prefer-destructuring": ["warn"],
+    "prefer-arrow-callback": ["warn", {"allowUnboundThis": false}],
+    "object-curly-newline": ["off"],
+    "no-underscore-dangle": ["off"],
+    "one-var-declaration-per-line": ["off"],
+    "class-methods-use-this": ["off"],
+    "operator-linebreak": ["off"],
+    "implicit-arrow-linebreak": ["off"],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/test/**/*.js", "**/*.spec.js", "**/example/*.js"]}]
+  },
+  "overrides": [{
+    "files": ["**/test/**/*.js", "**/*.spec.js"],
+    "rules": {
+      "prefer-arrow-callback": ["off"],
+      "func-names": ["off"]
+    }
+  }]
+}
