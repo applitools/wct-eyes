@@ -175,8 +175,9 @@ var Eyes = /** @class */ (function () {
     var that = this;
     this.eyesEmitter = window.eyesEmitter = new parent.EyesEmitter();
 
+    this.sessionId = undefined;
     this.socket = undefined;
-    this.controlFlow = new Promise(function (resolve, reject) {
+    this.socketPromise = new Promise(function (resolve, reject) {
       CLISocket.init(function (error, socket) {
         if (error) return reject(error);
 
@@ -184,6 +185,8 @@ var Eyes = /** @class */ (function () {
         resolve();
       });
     });
+
+    this.controlFlow = undefined;
   }
 
   /**
@@ -192,9 +195,12 @@ var Eyes = /** @class */ (function () {
    */
   Eyes.prototype.open = function (appName, testName) {
     var that = this;
-    this.controlFlow = this.controlFlow.then(function () {
+    this.controlFlow = this.socketPromise.then(function () {
       return new Promise(function (resolve) {
-        that.eyesEmitter.once('eyes:openDone', resolve);
+        that.eyesEmitter.once('eyes:openDone', function (sessionData) {
+          that.sessionId = sessionData.sessionId;
+          resolve();
+        });
         that.socket.emitEvent('eyes:open', { appName: appName, testName: testName });
       });
     });
@@ -207,29 +213,24 @@ var Eyes = /** @class */ (function () {
   Eyes.prototype.checkWindow = function (name) {
     var that = this;
     this.controlFlow = this.controlFlow.then(function () {
-      return new Promise(function (resolve, reject) {
-        that.eyesEmitter.once('eyes:checkWindowDone', function (testResult) {
-          if (testResult.asExpected === false) {
-            return reject(new Error("Match detected differences!"));
-          }
-          resolve();
-        });
-        that.socket.emitEvent('eyes:checkWindow', { name: name });
+      return new Promise(function (resolve) {
+        that.eyesEmitter.once('eyes:checkWindowDone', resolve);
+        that.socket.emitEvent('eyes:checkWindow', { sessionId: that.sessionId, name: name });
       });
     });
 
     return this.controlFlow;
   };
 
-  Eyes.prototype.close = function () {
+  Eyes.prototype.close = function (throwEx) {
     var that = this;
     this.controlFlow = this.controlFlow.then(function () {
-      return new Promise(function (resolve) {
+      return new Promise(function (resolve, reject) {
         that.eyesEmitter.once('eyes:closeDone', function (testResults) {
-          debugger;
-          resolve();
+          if (testResults.passed) return resolve();
+          return reject(new Error(testResults.message));
         });
-        that.socket.emitEvent('eyes:close', {});
+        that.socket.emitEvent('eyes:close', { sessionId: that.sessionId, throwEx: throwEx });
       });
     });
     return this.controlFlow;
@@ -237,11 +238,9 @@ var Eyes = /** @class */ (function () {
 
   Eyes.prototype.abortIfNotClosed = function () {
     var that = this;
-    this.controlFlow = this.controlFlow.then(function () {
-      return new Promise(function (resolve) {
-        that.eyesEmitter.once('eyes:abortIfNotClosedDone', resolve);
-        that.socket.emitEvent('eyes:abortIfNotClosed', {});
-      });
+    this.controlFlow = new Promise(function (resolve) {
+      that.eyesEmitter.once('eyes:abortIfNotClosedDone', resolve);
+      that.socket.emitEvent('eyes:abortIfNotClosed', { sessionId: that.sessionId });
     });
     return this.controlFlow;
   };
@@ -255,17 +254,6 @@ var Eyes = /** @class */ (function () {
     }
 
     return this.controlFlow;
-  };
-
-  /**
-   * @param {function} [callback]
-   */
-  Eyes.prototype.afterEach = function (callback) {
-    this.controlFlow = this.controlFlow.catch(function (err) {
-      // ignore between
-    });
-
-    if (callback) callback();
   };
 
   window.Eyes = Eyes;
