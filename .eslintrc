@@ -21,6 +21,7 @@
       "functions": "never"
     }],
     "arrow-parens": ["error", "always"],
+    "no-console": ["off"],
     "no-use-before-define": ["off"],
     "no-shadow": ["error", {"builtinGlobals": false, "hoist": "functions", "allow": ["driver"]}],
     "consistent-return": ["warn"],
