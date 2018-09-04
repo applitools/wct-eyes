@@ -237,12 +237,14 @@ var Eyes = /** @class */ (function () {
   };
 
   Eyes.prototype.abortIfNotClosed = function () {
-    var that = this;
-    this.controlFlow = new Promise(function (resolve) {
-      that.eyesEmitter.once('eyes:abortIfNotClosedDone', resolve);
-      that.socket.emitEvent('eyes:abortIfNotClosed', { sessionId: that.sessionId });
-    });
-    return this.controlFlow;
+    if (this.sessionId) {
+      var that = this;
+      this.controlFlow = new Promise(function (resolve) {
+        that.eyesEmitter.once('eyes:abortIfNotClosedDone', resolve);
+        that.socket.emitEvent('eyes:abortIfNotClosed', { sessionId: that.sessionId });
+      });
+      return this.controlFlow;
+    }
   };
 
   /**
