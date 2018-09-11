@@ -59,6 +59,10 @@
         "help": "Show all Eyes SDK logs into common thread",
         "full": "eyes-verbose",
         "flag": true
+      },
+      "subsuitesWidth": {
+        "help": "A width of subsuites in pixels, will be changed after browser is open",
+        "full": "eyes-subsuites-width"
       }
     }
   },
