@@ -1,6 +1,6 @@
 {
   "name": "wct-eyes",
-  "version": "1.0.0-alpha2",
+  "version": "1.0.0-alpha3",
   "description": "WCT plugin that enables support for local browsers via Selenium",
   "keywords": [
     "wct",
@@ -34,8 +34,8 @@
   ],
   "main": "lib/plugin.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "^4.1.0",
-    "@applitools/eyes-selenium": "^4.1.0",
+    "@applitools/eyes-sdk-core": "^4.3.0",
+    "@applitools/eyes-selenium": "^4.2.0",
     "selenium-webdriver": "^4.0.0-alpha.1",
     "express": "^4.16.4",
     "chalk": "^2.4.1",
