@@ -46,6 +46,7 @@ function getParam(param) {
  * @param {function} done
  */
 function loadScript(path, done) {
+  console.debug('WctEyes: loadScript() - begin', path);
   var script = document.createElement('script');
   script.src = path;
   if (done) {
@@ -64,8 +65,10 @@ function loadScript(path, done) {
 var CLISocket = /** @class */ (function () {
   var SOCKETIO_ENDPOINT = window.location.protocol + '//' + window.location.host;
   var SOCKETIO_LIBRARY = SOCKETIO_ENDPOINT + '/socket.io/socket.io.js';
+  console.debug('WctEyes: CLISocket() - define', SOCKETIO_ENDPOINT, SOCKETIO_LIBRARY);
 
   function CLISocket(browserId, socket) {
+    console.debug('WctEyes: CLISocket() - create', browserId);
     this.browserId = browserId;
     this.socket = socket;
   }
@@ -75,6 +78,7 @@ var CLISocket = /** @class */ (function () {
    * @param {*} data Additional data to pass with the event.
    */
   CLISocket.prototype.emitEvent = function (event, data) {
+    console.debug('WctEyes: CLISocket.emitEvent() - begin', event, data);
     this.socket.emit('client-event', {
       browserId: this.browserId,
       event: event,
@@ -90,16 +94,20 @@ var CLISocket = /** @class */ (function () {
    */
   CLISocket.init = function (done) {
     var browserId = getParam('cli_browser_id');
+    console.debug('WctEyes: CLISocket.init() - begin', browserId);
     if (!browserId) return done();
 
     function openSocket() {
+      console.debug('WctEyes: CLISocket.init() - openSocket');
       var socket = io(SOCKETIO_ENDPOINT);
       socket.on('error', function (error) {
+        console.debug('WctEyes: CLISocket.init() - error');
         socket.off();
         done(error);
       });
 
       socket.on('connect', function () {
+        console.debug('WctEyes: CLISocket.init() - connect');
         socket.off();
         done(null, new CLISocket(browserId, socket));
       });
@@ -109,6 +117,7 @@ var CLISocket = /** @class */ (function () {
       openSocket();
     } else {
       loadScript(SOCKETIO_LIBRARY, function (error) {
+        console.debug('WctEyes: CLISocket.init() - loadScript done', error);
         if (error) return done(error);
         openSocket();
       });
@@ -123,10 +132,12 @@ var CLISocket = /** @class */ (function () {
  */
 var EyesEmitter = /** @class */ (function () {
   function EyesEmitter() {
+    console.debug('WctEyes: EyesEmitter() - create');
     this.events = {};
   }
 
   EyesEmitter.prototype.on = function (eventName, fn) {
+    console.debug('WctEyes: EyesEmitter.on() - begin', eventName);
     if (typeof this.events[eventName] !== 'object') {
       this.events[eventName] = [];
     }
@@ -135,6 +146,7 @@ var EyesEmitter = /** @class */ (function () {
   };
 
   EyesEmitter.prototype.off = function (eventName, fn) {
+    console.debug('WctEyes: EyesEmitter.off() - begin', eventName);
     if (typeof this.events[eventName] === 'object') {
       var idx = this.events[eventName].indexOf(fn);
 
@@ -145,6 +157,7 @@ var EyesEmitter = /** @class */ (function () {
   };
 
   EyesEmitter.prototype.once = function (eventName, fn) {
+    console.debug('WctEyes: EyesEmitter.once() - begin', eventName);
     this.on(eventName, function g () {
       this.off(eventName, g);
       fn.apply(this, arguments);
@@ -152,6 +165,7 @@ var EyesEmitter = /** @class */ (function () {
   };
 
   EyesEmitter.prototype.emit = function (eventName) {
+    console.debug('WctEyes: EyesEmitter.emit() - begin', eventName);
     var args = [].slice.call(arguments, 1);
 
     if (typeof this.events[eventName] === 'object') {
@@ -173,19 +187,23 @@ var EyesEmitter = /** @class */ (function () {
 var Eyes = /** @class */ (function () {
   function Eyes() {
     var that = this;
+    console.debug('WctEyes: constructor() - begin');
     this.eyesEmitter = window.eyesEmitter = new parent.EyesEmitter();
 
     this.sessionId = undefined;
     this.socket = undefined;
     this.socketPromise = new Promise(function (resolve, reject) {
+      console.debug('WctEyes: constructor() - socket promise');
       CLISocket.init(function (error, socket) {
         if (error) return reject(error);
 
         that.socket = socket;
+        console.debug('WctEyes: constructor() - socket created');
         resolve();
       });
     });
 
+    console.debug('WctEyes: constructor() - end');
     this.controlFlow = undefined;
   }
 
@@ -195,12 +213,16 @@ var Eyes = /** @class */ (function () {
    */
   Eyes.prototype.open = function (appName, testName) {
     var that = this;
+    console.debug('WctEyes: open() - begin');
     this.controlFlow = this.socketPromise.then(function () {
       return new Promise(function (resolve) {
+        console.debug('WctEyes: open() - begin promise');
         that.eyesEmitter.once('eyes:openDone', function (sessionData) {
+          console.debug('WctEyes: open() - openDone', sessionData);
           that.sessionId = sessionData.sessionId;
           resolve();
         });
+        console.debug('WctEyes: open() - open');
         that.socket.emitEvent('eyes:open', { appName: appName, testName: testName });
       });
     });
@@ -212,9 +234,15 @@ var Eyes = /** @class */ (function () {
    */
   Eyes.prototype.checkWindow = function (name) {
     var that = this;
+    console.debug('WctEyes: checkWindow() - begin');
     this.controlFlow = this.controlFlow.then(function () {
       return new Promise(function (resolve) {
-        that.eyesEmitter.once('eyes:checkWindowDone', resolve);
+        console.debug('WctEyes: checkWindow() - begin promise');
+        that.eyesEmitter.once('eyes:checkWindowDone', function () {
+          console.debug('WctEyes: checkWindow() - checkWindowDone');
+          resolve();
+        });
+        console.debug('WctEyes: checkWindow() - checkWindow');
         that.socket.emitEvent('eyes:checkWindow', { sessionId: that.sessionId, name: name });
       });
     });
@@ -224,12 +252,16 @@ var Eyes = /** @class */ (function () {
 
   Eyes.prototype.close = function (throwEx) {
     var that = this;
+    console.debug('WctEyes: close() - begin');
     this.controlFlow = this.controlFlow.then(function () {
       return new Promise(function (resolve, reject) {
+        console.debug('WctEyes: close() - begin promise');
         that.eyesEmitter.once('eyes:closeDone', function (testResults) {
+          console.debug('WctEyes: close() - closeDone', testResults);
           if (testResults.passed) return resolve();
           return reject(new Error(testResults.message));
         });
+        console.debug('WctEyes: close() - close');
         that.socket.emitEvent('eyes:close', { sessionId: that.sessionId, throwEx: throwEx });
       });
     });
@@ -237,10 +269,16 @@ var Eyes = /** @class */ (function () {
   };
 
   Eyes.prototype.abortIfNotClosed = function () {
+    console.debug('WctEyes: abortIfNotClosed() - begin');
     if (this.sessionId) {
       var that = this;
       this.controlFlow = new Promise(function (resolve) {
-        that.eyesEmitter.once('eyes:abortIfNotClosedDone', resolve);
+        console.debug('WctEyes: abortIfNotClosed() - begin promise');
+        that.eyesEmitter.once('eyes:abortIfNotClosedDone', function () {
+          console.debug('WctEyes: abortIfNotClosed() - abortIfNotClosedDone');
+          resolve();
+        });
+        console.debug('WctEyes: abortIfNotClosed() - abortIfNotClosed');
         that.socket.emitEvent('eyes:abortIfNotClosed', { sessionId: that.sessionId });
       });
       return this.controlFlow;
@@ -251,7 +289,9 @@ var Eyes = /** @class */ (function () {
    * @param {function} callback
    */
   Eyes.prototype.whenDone = function (callback) {
+    console.debug('WctEyes: whenDone() - begin');
     if (callback) {
+      console.debug('WctEyes: whenDone() - in callback');
       this.controlFlow.then(callback, callback);
     }
 
