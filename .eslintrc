@@ -2,8 +2,7 @@
   "root": true,
   "extends": ["airbnb-base"],
   "env": {
-    "node": true,
-    "mocha": true
+    "node": true
   },
   "parserOptions": {
     "ecmaVersion": 8,
@@ -21,7 +20,7 @@
     }],
     "arrow-parens": ["error", "always"],
     "no-console": ["off"],
-    "no-use-before-define": ["off"],
+    "no-use-before-define": ["error", {"classes": false}],
     "no-shadow": ["error", {"builtinGlobals": false, "hoist": "functions", "allow": ["driver"]}],
     "consistent-return": ["warn"],
     "max-len": ["warn", 120],
@@ -35,6 +34,23 @@
     "one-var-declaration-per-line": ["off"],
     "class-methods-use-this": ["off"],
     "operator-linebreak": ["off"],
+    "no-continue": ["off"],
+    "no-await-in-loop": ["off"],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ForInStatement",
+        "message": "for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array."
+      },
+      {
+        "selector": "LabeledStatement",
+        "message": "Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand."
+      },
+      {
+        "selector": "WithStatement",
+        "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
+      }
+    ],
     "implicit-arrow-linebreak": ["off"],
     "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/test/**/*.js", "**/*.spec.js", "**/example/*.js"]}]
   },
