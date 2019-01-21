@@ -1,6 +1,6 @@
 {
   "name": "wct-eyes",
-  "version": "1.0.0-alpha4",
+  "version": "1.0.0-alpha5",
   "description": "WCT plugin that enables support for local browsers via Selenium",
   "keywords": [
     "wct",
@@ -34,12 +34,17 @@
   ],
   "main": "lib/plugin.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "^4.5.2",
-    "@applitools/eyes-selenium": "^4.3.2",
+    "@applitools/eyes-sdk-core": "^4.6.2",
+    "@applitools/eyes-selenium": "^4.4.3",
     "selenium-webdriver": "^4.0.0-alpha.1",
     "express": "^4.16.4",
     "chalk": "^2.4.1",
     "send": "^0.16.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-config-airbnb": "^17.1.0"
   },
   "wct-plugin": {
     "cli-options": {
