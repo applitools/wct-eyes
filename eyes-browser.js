@@ -149,6 +149,7 @@ var EyesConnectionClient = /** @class */ (function () {
 
     this.browserId = undefined;
     this.socket = undefined;
+    this.eyesEmitter = new EyesEmitter();
     this.socketPromise = new Promise(function (resolve, reject) {
       console.debug('EyesConnectionClient: constructor() - socket promise');
       createSocket(function (error, browserId, socket) {
@@ -161,6 +162,10 @@ var EyesConnectionClient = /** @class */ (function () {
       });
     });
   }
+
+  EyesConnectionClient.prototype.getEmitter = function () {
+    return this.eyesEmitter;
+  };
 
   EyesConnectionClient.prototype.getPromise = function () {
     return this.socketPromise;
@@ -181,10 +186,17 @@ var EyesConnectionClient = /** @class */ (function () {
 
 
 if(window.top === window.self) {
-  window.eyesEmitter = new EyesEmitter();
-  window.eyesConnectionClient = new EyesConnectionClient();
+  window.eyesTopClient = new EyesConnectionClient();
 }
 
+function getEyesTopClient() {
+  if (!window.top.eyesTopClient) {
+    console.log('eyesTopClient not found, creating...');
+    window.top.eyesTopClient = new EyesConnectionClient();
+  }
+
+  return window.top.eyesTopClient;
+}
 
 
 /**
@@ -193,11 +205,10 @@ if(window.top === window.self) {
 var EyesClient = /** @class */ (function () {
   function Eyes() {
     console.debug('WctEyes: constructor() - begin');
-    this.eyesEmitter = window.top.eyesEmitter;
-    this.connectionClient = window.top.eyesConnectionClient;
+    this.eyesTop = getEyesTopClient();
 
     this.sessionId = undefined;
-    this.controlFlow = this.connectionClient.getPromise();
+    this.controlFlow = this.eyesTop.getPromise();
   }
 
   /**
@@ -210,7 +221,7 @@ var EyesClient = /** @class */ (function () {
     this.controlFlow = this.controlFlow.then(function () {
       return new Promise(function (resolve) {
         console.debug('WctEyes: open() - begin promise');
-        that.eyesEmitter.once('eyes:openDone', function (sessionData) {
+        that.eyesTop.getEmitter().once('eyes:openDone', function (sessionData) {
           console.debug('WctEyes: open() - openDone', sessionData);
           that.sessionId = sessionData.sessionId;
           resolve();
@@ -221,7 +232,7 @@ var EyesClient = /** @class */ (function () {
         var generatedId = Math.random().toString(36).substring(2);
         frameElement.name = '123';
         frameElement.id = generatedId;
-        that.connectionClient.startCommand('eyes:open', { appName: appName, testName: testName, frameId: generatedId });
+        that.eyesTop.startCommand('eyes:open', { appName: appName, testName: testName, frameId: generatedId });
       });
     });
     return this.controlFlow;
@@ -236,12 +247,12 @@ var EyesClient = /** @class */ (function () {
     this.controlFlow = this.controlFlow.then(function () {
       return new Promise(function (resolve) {
         console.debug('WctEyes: checkWindow() - begin promise');
-        that.eyesEmitter.once('eyes:checkWindowDone', function () {
+        that.eyesTop.getEmitter().once('eyes:checkWindowDone', function () {
           console.debug('WctEyes: checkWindow() - checkWindowDone');
           resolve();
         });
         console.debug('WctEyes: checkWindow() - checkWindow');
-        that.connectionClient.startCommand('eyes:checkWindow', { sessionId: that.sessionId, name: name });
+        that.eyesTop.startCommand('eyes:checkWindow', { sessionId: that.sessionId, name: name });
       });
     });
 
@@ -254,13 +265,13 @@ var EyesClient = /** @class */ (function () {
     this.controlFlow = this.controlFlow.then(function () {
       return new Promise(function (resolve, reject) {
         console.debug('WctEyes: close() - begin promise');
-        that.eyesEmitter.once('eyes:closeDone', function (testResults) {
+        that.eyesTop.getEmitter().once('eyes:closeDone', function (testResults) {
           console.debug('WctEyes: close() - closeDone', testResults);
           if (testResults.passed) return resolve();
           return reject(new Error(testResults.message));
         });
         console.debug('WctEyes: close() - close');
-        that.connectionClient.startCommand('eyes:close', { sessionId: that.sessionId, throwEx: throwEx });
+        that.eyesTop.startCommand('eyes:close', { sessionId: that.sessionId, throwEx: throwEx });
       });
     });
     return this.controlFlow;
@@ -272,12 +283,12 @@ var EyesClient = /** @class */ (function () {
       var that = this;
       this.controlFlow = new Promise(function (resolve) {
         console.debug('WctEyes: abortIfNotClosed() - begin promise');
-        that.eyesEmitter.once('eyes:abortIfNotClosedDone', function () {
+        that.eyesTop.getEmitter().once('eyes:abortIfNotClosedDone', function () {
           console.debug('WctEyes: abortIfNotClosed() - abortIfNotClosedDone');
           resolve();
         });
         console.debug('WctEyes: abortIfNotClosed() - abortIfNotClosed');
-        that.connectionClient.startCommand('eyes:abortIfNotClosed', { sessionId: that.sessionId });
+        that.eyesTop.startCommand('eyes:abortIfNotClosed', { sessionId: that.sessionId });
       });
       return this.controlFlow;
     }
