@@ -60,6 +60,16 @@
         "help": "Defines the proxy server that will be used for requests to Applitools services.",
         "full": "eyes-proxy"
       },
+      "forceFullPageScreenshot": {
+        "help": "Determines wheter we make a screenshot of region or full-page-screenshot with stitching.",
+        "full": "force-full-page-screenshot",
+        "flag": true
+      },
+      "hideScrollbars": {
+        "help": "Determines wheter we need to hide scroolbars or not.",
+        "full": "hide-scrollbars",
+        "flag": true
+      },
       "verbose": {
         "help": "Show all Eyes SDK logs into common thread",
         "full": "eyes-verbose",
