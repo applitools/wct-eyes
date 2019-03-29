@@ -240,8 +240,9 @@ var EyesClient = /** @class */ (function () {
 
   /**
    * @param {string} [name]
+   * @param {boolean} [stitchContent]
    */
-  Eyes.prototype.checkWindow = function (name) {
+  Eyes.prototype.checkWindow = function (name, stitchContent = false) {
     var that = this;
     console.debug('WctEyes: checkWindow() - begin');
     this.controlFlow = this.controlFlow.then(function () {
@@ -252,7 +253,7 @@ var EyesClient = /** @class */ (function () {
           resolve();
         });
         console.debug('WctEyes: checkWindow() - checkWindow');
-        that.eyesTop.startCommand('eyes:checkWindow', { sessionId: that.sessionId, name: name });
+        that.eyesTop.startCommand('eyes:checkWindow', { sessionId: that.sessionId, name: name, stitchContent });
       });
     });
 
@@ -261,9 +262,10 @@ var EyesClient = /** @class */ (function () {
 
   /**
    * @param {string} [name]
+   * @param {boolean} [stitchContent]
    * @return {TestResults}
    */
-  Eyes.prototype.testWindow = function (name) {
+  Eyes.prototype.testWindow = function (name, stitchContent = false) {
     var that = this;
     console.debug('WctEyes: testWindow() - begin');
     this.controlFlow = this.controlFlow.then(function () {
@@ -275,7 +277,7 @@ var EyesClient = /** @class */ (function () {
           return reject(new Error(testResults.message));
         });
         console.debug('WctEyes: testWindow() - testWindow');
-        that.eyesTop.startCommand('eyes:testWindow', { sessionId: that.sessionId, name: name });
+        that.eyesTop.startCommand('eyes:testWindow', { sessionId: that.sessionId, name: name, stitchContent });
       });
     });
 
