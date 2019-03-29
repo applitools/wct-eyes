@@ -34,16 +34,16 @@
   ],
   "main": "lib/plugin.js",
   "dependencies": {
-    "@applitools/eyes-sdk-core": "^4.6.2",
-    "@applitools/eyes-selenium": "^4.4.3",
+    "@applitools/eyes-common": "^2.2.1",
+    "@applitools/eyes-selenium": "^4.11.0",
     "selenium-webdriver": "^4.0.0-alpha.1",
     "express": "^4.16.4",
     "chalk": "^2.4.1",
     "send": "^0.16.2"
   },
   "devDependencies": {
-    "eslint": "^5.12.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint": "^5.15.3",
+    "eslint-plugin-import": "^2.16.0",
     "eslint-config-airbnb": "^17.1.0"
   },
   "wct-plugin": {
