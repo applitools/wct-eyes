@@ -1,7 +1,11 @@
 {
   "root": true,
-  "extends": ["airbnb-base"],
+  "extends": [
+    "airbnb-base",
+    "plugin:node/recommended-script"
+  ],
   "env": {
+    "es6": true,
     "node": true
   },
   "parserOptions": {
@@ -9,7 +13,7 @@
     "sourceType": "script"
   },
   "rules": {
-    "strict": ["error", "global"],
+    "prefer-const": ["error", {"destructuring": "all"}],
     "one-var": ["error", {"initialized": "never"}],
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
@@ -18,47 +22,25 @@
       "exports": "always-multiline",
       "functions": "never"
     }],
-    "arrow-parens": ["error", "always"],
-    "no-console": ["off"],
-    "no-use-before-define": ["error", {"classes": false}],
-    "no-shadow": ["error", {"builtinGlobals": false, "hoist": "functions", "allow": ["driver"]}],
-    "consistent-return": ["warn"],
-    "max-len": ["warn", 120],
-    "no-unused-vars": ["warn"],
+    "no-unused-vars": ["warn", {"vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_"}],
     "no-param-reassign": ["off"],
-    "global-require": ["warn"],
-    "prefer-destructuring": ["warn"],
-    "prefer-arrow-callback": ["warn", {"allowUnboundThis": false}],
-    "object-curly-newline": ["off"],
     "no-underscore-dangle": ["off"],
-    "one-var-declaration-per-line": ["off"],
+    "object-curly-newline": ["off"],
     "class-methods-use-this": ["off"],
     "operator-linebreak": ["off"],
-    "no-continue": ["off"],
     "no-await-in-loop": ["off"],
-    "no-restricted-syntax": [
-      "error",
-      {
-        "selector": "ForInStatement",
-        "message": "for..in loops iterate over the entire prototype chain, which is virtually never what you want. Use Object.{keys,values,entries}, and iterate over the resulting array."
-      },
-      {
-        "selector": "LabeledStatement",
-        "message": "Labels are a form of GOTO; using them makes code confusing and hard to maintain and understand."
-      },
-      {
-        "selector": "WithStatement",
-        "message": "`with` is disallowed in strict mode because it makes code impossible to predict and optimize."
-      }
-    ],
-    "implicit-arrow-linebreak": ["off"],
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/test/**/*.js", "**/*.spec.js", "**/example/*.js"]}]
-  },
-  "overrides": [{
-    "files": ["**/test/**/*.js", "**/*.spec.js"],
-    "rules": {
-      "prefer-arrow-callback": ["off"],
-      "func-names": ["off"]
-    }
-  }]
+    "one-var-declaration-per-line": ["error", "initializations"],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/test/**/*.js", "**/*.spec.js", "**/example/*.js"]}],
+    "max-len": ["warn", 120],
+
+    // node
+    "node/exports-style": ["error", "exports"],
+    "node/prefer-global/buffer": ["error", "always"],
+    "node/prefer-global/console": ["error", "always"],
+    "node/prefer-global/process": ["error", "always"],
+    "node/prefer-global/text-decoder": ["error", "never"],
+    "node/prefer-global/text-encoder": ["error", "never"],
+    "node/prefer-global/url-search-params": ["error", "never"],
+    "node/prefer-global/url": ["error", "never"]
+  }
 }

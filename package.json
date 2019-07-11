@@ -34,17 +34,21 @@
   ],
   "main": "lib/plugin.js",
   "dependencies": {
-    "@applitools/eyes-common": "~3.7.1",
-    "@applitools/eyes-selenium": "~4.20.3",
-    "selenium-webdriver": "^4.0.0-alpha.3",
-    "express": "^4.16.4",
+    "@applitools/eyes-common": "~3.8.0",
+    "@applitools/eyes-selenium": "~4.23.0",
+    "selenium-webdriver": "^4.0.0-alpha.4",
+    "express": "^4.17.1",
     "chalk": "^2.4.2",
-    "send": "^0.16.2"
+    "send": "^0.17.1"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-config-airbnb": "^17.1.0"
+    "eslint": "^6.0.1",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-node": "^9.1.0"
+  },
+  "scripts": {
+    "lint": "eslint . --ext js"
   },
   "wct-plugin": {
     "cli-options": {
