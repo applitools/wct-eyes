@@ -198,6 +198,15 @@ function getEyesTopClient() {
   return window.top.eyesTopClient;
 }
 
+function randomAlphanumeric(length = 8) {
+  const ALPHANUMERIC_MASK = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let res = '';
+  for (let i = 0; i < length; i += 1) {
+    res += ALPHANUMERIC_MASK.charAt(Math.floor(Math.random() * ALPHANUMERIC_MASK.length));
+  }
+  return res;
+}
+
 
 /**
  *
@@ -229,8 +238,7 @@ var EyesClient = /** @class */ (function () {
         console.debug('WctEyes: open() - open');
 
         var frameElement = window.frameElement;
-        var generatedId = Math.random().toString(36).substring(2);
-        frameElement.name = '123';
+        var generatedId = 'eyes' + randomAlphanumeric();
         frameElement.id = generatedId;
         that.eyesTop.startCommand('eyes:open', { appName: appName, testName: testName, frameId: generatedId });
       });
