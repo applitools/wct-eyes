@@ -34,16 +34,16 @@
   ],
   "main": "lib/plugin.js",
   "dependencies": {
-    "@applitools/eyes-common": "~3.8.0",
-    "@applitools/eyes-selenium": "~4.23.0",
+    "@applitools/eyes-common": "~3.8.2",
+    "@applitools/eyes-selenium": "~4.23.5",
     "selenium-webdriver": "^4.0.0-alpha.4",
     "express": "^4.17.1",
     "chalk": "^2.4.2",
     "send": "^0.17.1"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
-    "eslint-plugin-import": "^2.18.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-import": "^2.18.2",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-node": "^9.1.0"
   },
@@ -64,16 +64,6 @@
         "help": "Defines the proxy server that will be used for requests to Applitools services.",
         "full": "eyes-proxy"
       },
-      "forceFullPageScreenshot": {
-        "help": "Determines wheter we make a screenshot of region or full-page-screenshot with stitching.",
-        "full": "force-full-page-screenshot",
-        "flag": true
-      },
-      "hideScrollbars": {
-        "help": "Determines wheter we need to hide scroolbars or not.",
-        "full": "hide-scrollbars",
-        "flag": true
-      },
       "verbose": {
         "help": "Show all Eyes SDK logs into common thread",
         "full": "eyes-verbose",
@@ -82,6 +72,10 @@
       "subsuitesWidth": {
         "help": "A width of subsuites in pixels, will be changed after browser is open",
         "full": "eyes-subsuites-width"
+      },
+      "browsersInfo": {
+        "help": "A list of browsers to test on",
+        "full": "eyes-browsers"
       }
     }
   },
