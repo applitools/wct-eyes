@@ -268,30 +268,6 @@ var EyesClient = /** @class */ (function () {
     return this.controlFlow;
   };
 
-  /**
-   * @param {string} [name]
-   * @param {boolean} [stitchContent]
-   * @return {TestResults}
-   */
-  Eyes.prototype.testWindow = function (name, stitchContent = false) {
-    var that = this;
-    console.debug('WctEyes: testWindow() - begin');
-    this.controlFlow = this.controlFlow.then(function () {
-      return new Promise(function (resolve) {
-        console.debug('WctEyes: testWindow() - begin promise');
-        that.eyesTop.getEmitter().once('eyes:testWindowDone', function (testResults) {
-          console.debug('WctEyes: testWindow() - testWindowDone', testResults);
-          if (testResults.passed) return resolve();
-          return reject(new Error(testResults.message));
-        });
-        console.debug('WctEyes: testWindow() - testWindow');
-        that.eyesTop.startCommand('eyes:testWindow', { sessionId: that.sessionId, name: name, stitchContent });
-      });
-    });
-
-    return this.controlFlow;
-  };
-
   Eyes.prototype.close = function (throwEx) {
     var that = this;
     console.debug('WctEyes: close() - begin');
