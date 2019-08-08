@@ -1,6 +1,6 @@
 {
   "name": "wct-eyes",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "WCT plugin that enables support for local browsers via Selenium",
   "keywords": [
     "wct",
