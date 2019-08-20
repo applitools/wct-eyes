@@ -38,7 +38,6 @@
     "@applitools/eyes-selenium": "~4.26.1",
     "selenium-webdriver": "^4.0.0-alpha.4",
     "express": "^4.17.1",
-    "chalk": "^2.4.2",
     "send": "^0.17.1"
   },
   "devDependencies": {

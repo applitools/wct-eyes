@@ -268,19 +268,18 @@ var EyesClient = /** @class */ (function () {
     return this.controlFlow;
   };
 
-  Eyes.prototype.close = function (throwEx) {
+  Eyes.prototype.close = function () {
     var that = this;
     console.debug('WctEyes: close() - begin');
     this.controlFlow = this.controlFlow.then(function () {
-      return new Promise(function (resolve, reject) {
+      return new Promise(function (resolve) {
         console.debug('WctEyes: close() - begin promise');
-        that.eyesTop.getEmitter().once('eyes:closeDone', function (testResults) {
-          console.debug('WctEyes: close() - closeDone', testResults);
-          if (testResults.passed) return resolve();
-          return reject(new Error(testResults.message));
+        that.eyesTop.getEmitter().once('eyes:closeDone', function () {
+          console.debug('WctEyes: close() - closeDone');
+          resolve();
         });
         console.debug('WctEyes: close() - close');
-        that.eyesTop.startCommand('eyes:close', { sessionId: that.sessionId, throwEx: throwEx });
+        that.eyesTop.startCommand('eyes:close', { sessionId: that.sessionId });
       });
     });
     return this.controlFlow;
